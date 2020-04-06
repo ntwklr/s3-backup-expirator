@@ -1,3 +1,5 @@
 #!/bin/bash
 
-go build -o ./build/s3-backup-expirator -a s3-backup-expirator.go
+VERSION=0.0.1
+
+gox -ldflags "-X main.version=${VERSION}" -output="build/{{.Dir}}_{{.OS}}_{{.Arch}}"
