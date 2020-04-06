@@ -3,7 +3,7 @@ package backup
 import (
 	"time"
 	"github.com/jinzhu/now"
-	"github.com/etenzy/s3-backup-expirator/date"
+	"github.com/ntwklr/s3-backup-expirator/date"
 )
 
 func Retention(

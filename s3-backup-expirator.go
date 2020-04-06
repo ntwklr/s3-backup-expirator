@@ -6,10 +6,10 @@ import (
 	"flag"
 	"time"
 	"github.com/jinzhu/now"
-	"github.com/etenzy/s3-backup-expirator/aws"
-	"github.com/etenzy/s3-backup-expirator/backup"
-	"github.com/etenzy/s3-backup-expirator/date"
-	"github.com/etenzy/s3-backup-expirator/error"
+	"github.com/ntwklr/s3-backup-expirator/aws"
+	"github.com/ntwklr/s3-backup-expirator/backup"
+	"github.com/ntwklr/s3-backup-expirator/date"
+	"github.com/ntwklr/s3-backup-expirator/error"
 )
 
 // Deletes the specified object in the specified S3 Bucket in the region configured in the shared config

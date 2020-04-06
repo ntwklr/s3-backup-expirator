@@ -1,7 +1,7 @@
 package aws
 
 import (
-	"github.com/etenzy/s3-backup-expirator/error"
+	"github.com/ntwklr/s3-backup-expirator/error"
     "github.com/aws/aws-sdk-go/aws/session"
 )
 

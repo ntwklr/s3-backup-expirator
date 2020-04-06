@@ -3,7 +3,7 @@ package aws
 import (
 	"github.com/aws/aws-sdk-go/aws"
     "github.com/aws/aws-sdk-go/service/s3"
-	"github.com/etenzy/s3-backup-expirator/error"
+	"github.com/ntwklr/s3-backup-expirator/error"
 )
 
 func List(bucket string) (*s3.ListObjectsV2Output) {
