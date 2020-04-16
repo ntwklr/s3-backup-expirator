@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"time"
 
@@ -14,6 +15,8 @@ import (
 	"github.com/ntwklr/s3-backup-expirator/utilities"
 )
 
+var version string
+
 func init() {
 	gotenv.OverLoad()
 }
@@ -25,6 +28,11 @@ func init() {
 //    go run s3-backup-expirator BUCKET_NAME
 func main() {
 	bootStart := time.Now()
+
+	if len(os.Args) > 1 && (os.Args[1] == "-V" || os.Args[1] == "--version") {
+		fmt.Println("Version: " + version)
+		os.Exit(0)
+	}
 
 	if len(os.Args) < 2 {
 		error.Exitf("Bucket name required\nUsage: %s bucket_name",
