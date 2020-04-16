@@ -29,15 +29,16 @@ func init() {
 func main() {
 	bootStart := time.Now()
 
+	if len(os.Args) < 2 {
+		error.Exitf("Bucket name required\nUsage: %s bucket_name",
+			os.Args[0])
+	}
+
 	if len(os.Args) > 1 && (os.Args[1] == "-V" || os.Args[1] == "--version") {
 		fmt.Println("Version: " + version)
 		os.Exit(0)
 	}
 
-	if len(os.Args) < 2 {
-		error.Exitf("Bucket name required\nUsage: %s bucket_name",
-			os.Args[0])
-	}
 	bucket := os.Args[len(os.Args)-1]
 
 	prefix := flag.String("prefix", "", "File-Prefix")
