@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/ntwklr/s3-backup-expirator/aws"
 	"github.com/ntwklr/s3-backup-expirator/date"
+	"github.com/ntwklr/s3-backup-expirator/error"
 	"github.com/ntwklr/s3-backup-expirator/utilities"
 	"github.com/uniplaces/carbon"
 )
@@ -57,7 +58,13 @@ func List(bucket string, prefix string) Backups {
 		utilities.TimeTrack(start, "backup.List")
 	}
 
-	return Backups{Bucket: bucket, Prefix: prefix, Backups: Hydrate(objectList, prefix)}
+	backups := Hydrate(objectList, prefix)
+
+	if len(backups) < 1 {
+		error.Exitf("Bucket %q is empty.", bucket)
+	}
+
+	return Backups{Bucket: bucket, Prefix: prefix, Backups: backups}
 }
 
 func DeleteExpired(backups Backups, backupsToStay Backups) {
@@ -93,6 +100,9 @@ func Hydrate(objectList []*s3.Object, prefix string) []Backup {
 		}
 
 		// No dot-files/folders
+		if strings.HasPrefix(*item.Key, ".") {
+			continue
+		}
 		if strings.Contains(*item.Key, "/.") {
 			continue
 		}
