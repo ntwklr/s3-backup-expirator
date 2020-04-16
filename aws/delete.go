@@ -2,12 +2,12 @@ package aws
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
-    "github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/ntwklr/s3-backup-expirator/error"
 )
 
-func Delete(bucket string, object string) (*s3.DeleteObjectOutput) {
-	session := Session();
+func Delete(bucket string, object string) *s3.DeleteObjectOutput {
+	session := Session()
 	client := Client(session)
 
 	// Delete the item

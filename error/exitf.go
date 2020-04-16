@@ -1,11 +1,11 @@
 package error
 
 import (
-	"os"
 	"fmt"
+	"os"
 )
 
 func Exitf(msg string, args ...interface{}) {
-    fmt.Fprintf(os.Stderr, msg+"\n", args...)
-    os.Exit(1)
+	fmt.Fprintf(os.Stderr, msg+"\n", args...)
+	os.Exit(1)
 }

@@ -1,13 +1,13 @@
 package aws
 
 import (
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/ntwklr/s3-backup-expirator/error"
-    "github.com/aws/aws-sdk-go/aws/session"
 )
 
-func Session() (*session.Session)  {
+func Session() *session.Session {
 	// Initialize a session that the SDK will use to load
-    // credentials & region from the shared credentials file ~/.aws/credentials.
+	// credentials & region from the shared credentials file ~/.aws/credentials.
 	sess, err := session.NewSession()
 
 	if err != nil {
