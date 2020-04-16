@@ -1,68 +1,74 @@
 package main
 
 import (
-	"os"
-	"fmt"
 	"flag"
+	"os"
 	"time"
-	"github.com/jinzhu/now"
-	"github.com/ntwklr/s3-backup-expirator/aws"
+
+	"github.com/subosito/gotenv"
+	"github.com/uniplaces/carbon"
+
 	"github.com/ntwklr/s3-backup-expirator/backup"
 	"github.com/ntwklr/s3-backup-expirator/date"
 	"github.com/ntwklr/s3-backup-expirator/error"
+	"github.com/ntwklr/s3-backup-expirator/utilities"
 )
+
+func init() {
+	gotenv.OverLoad()
+}
 
 // Deletes the specified object in the specified S3 Bucket in the region configured in the shared config
 // or AWS_REGION environment variable.
 //
 // Usage:
 //    go run s3-backup-expirator BUCKET_NAME
-func main()  {
+func main() {
+	bootStart := time.Now()
+
 	if len(os.Args) < 2 {
-        error.Exitf("Bucket name required\nUsage: %s bucket_name",
-            os.Args[0])
+		error.Exitf("Bucket name required\nUsage: %s bucket_name",
+			os.Args[0])
 	}
-
-	now.WeekStartDay = time.Monday
-
-	retentionDaily := flag.Int("daily", 8, "Daily Backup Retention Policy.")
-	retentionWeekly := flag.Int("weekly", 5, "Weekly Backup Retention Policy.")
-	retentionMonthly := flag.Int("monthly", 13, "Monthly Backup Retention Policy.")
-	retentionYearly := flag.Int("yearly", 7, "Yearly Backup Retention Policy.")
-	explainMode := flag.Bool("explain", false, "Explains wich files retain in bucket.")
-	dryRun := flag.Bool("dry-run", false, "Print the commands that would be executed, but do not execute them.")
-	flag.Parse()
-	
 	bucket := os.Args[len(os.Args)-1]
 
-	fileRetentionDates := backup.Retention(
-		now.BeginningOfDay(), 
-		*retentionDaily, 
-		*retentionWeekly, 
-		*retentionMonthly, 
-		*retentionYearly,
-	)
+	prefix := flag.String("prefix", "", "File-Prefix")
+	startDate := flag.String("start-date", "", "Start-Date for Backups (default: now)")
+	daily := flag.Int("daily", 0, "Daily Backup Retention Policy.")
+	weekly := flag.Int("weekly", 0, "Weekly Backup Retention Policy.")
+	monthly := flag.Int("monthly", 0, "Monthly Backup Retention Policy.")
+	yearly := flag.Int("yearly", 0, "Yearly Backup Retention Policy.")
+	explain := flag.Bool("explain", false, "Explains wich files retain in bucket.")
+	dryRun := flag.Bool("dry-run", false, "Print the commands that would be executed, but do not execute them.")
+	flag.Parse()
 
-	if *explainMode == true {
-		for i, item := range fileRetentionDates {
-			if i >= 0 {
-				fmt.Println(item)
-			}
-		}
+	utilities.Explain = *explain
+	utilities.DryRun = *dryRun
+
+	backupsStart := carbon.Now()
+
+	if *startDate != "" {
+		backupsStart = date.Extract(*startDate)
 	}
 
-	for _, item := range aws.List(bucket).Contents {
-		k, found := date.Find(fileRetentionDates, *item.Key)
-		if !found || k < 0 {
-			if ! *dryRun {
-				aws.Delete(bucket, *item.Key)
+	periodIntervals := utilities.Boot(*daily, *weekly, *monthly, *yearly)
 
-				fmt.Printf("Object %q successfully deleted\n", *item.Key)
-			} else {
-				fmt.Printf("Object %q will be deleted\n", *item.Key)
-			}
-		} else {
-			fmt.Printf("Object %q stays in bucket\n", *item.Key)
-		}
-    }
+	if utilities.Explain == true {
+		utilities.TimeTrack(bootStart, "app.Boot")
+	}
+	appStart := time.Now()
+
+	backups := backup.List(bucket, *prefix)
+
+	periods := backup.Periods(*backupsStart, periodIntervals)
+
+	backupsPerPeriod := backup.PerPeriod(periods, backups)
+
+	backupsToStay := backup.RemoveForAllPeriodsExceptOne(backupsPerPeriod, periodIntervals)
+
+	backup.DeleteExpired(backups, backupsToStay)
+
+	if utilities.Explain == true {
+		utilities.TimeTrack(appStart, "app.Execute")
+	}
 }
