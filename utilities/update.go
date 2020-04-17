@@ -36,7 +36,7 @@ func Update(projectOwner, projectRepo, binaryPlatform, version string) {
 		}
 	}
 
-	if download = "" {
+	if download == "" {
 		error.Exitf("Download failed. Binary not found.")
 	}
 
