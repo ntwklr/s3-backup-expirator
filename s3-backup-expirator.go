@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/subosito/gotenv"
@@ -13,6 +14,12 @@ import (
 	"github.com/ntwklr/s3-backup-expirator/date"
 	"github.com/ntwklr/s3-backup-expirator/error"
 	"github.com/ntwklr/s3-backup-expirator/utilities"
+)
+
+const (
+	projectOwner   = "ntwklr"
+	projectRepo    = "s3-backup-expirator"
+	binaryPlatform = runtime.GOOS + "_" + runtime.GOARCH
 )
 
 var version string
@@ -32,6 +39,10 @@ func main() {
 	if len(os.Args) < 2 {
 		error.Exitf("Bucket name required\nUsage: %s bucket_name",
 			os.Args[0])
+	}
+
+	if len(os.Args) > 1 && os.Args[1] == "self-update" {
+		utilities.Update(projectOwner, projectRepo, binaryPlatform, version)
 	}
 
 	if len(os.Args) > 1 && (os.Args[1] == "-V" || os.Args[1] == "--version") {

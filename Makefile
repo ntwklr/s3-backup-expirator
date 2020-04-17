@@ -1,11 +1,11 @@
-VERSION=1.0.1
+VERSION=1.1.0
 
 all: fmt combined
 
 combined:
 	go install .
 
-release: release-deps 
+release: tag release-deps 
 	gox -ldflags "-X main.version=${VERSION}" -output="build/{{.Dir}}_{{.OS}}_{{.Arch}}" .
 
 fmt:
@@ -13,3 +13,6 @@ fmt:
 
 release-deps:
 	go get github.com/mitchellh/gox
+
+tag:
+	git tag -a -m 'v${VERSION}' v${VERSION} && git push origin v${VERSION}
