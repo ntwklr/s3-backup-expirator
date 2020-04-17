@@ -36,6 +36,10 @@ func init() {
 func main() {
 	bootStart := time.Now()
 
+	if version == "" {
+		version = "0.0.0"
+	}
+
 	if len(os.Args) < 2 {
 		error.Exitf("Bucket name required\nUsage: %s bucket_name",
 			os.Args[0])
