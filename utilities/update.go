@@ -23,7 +23,7 @@ func Update(projectOwner, projectRepo, binaryPlatform, version string) {
 		error.Exitf("Error while fetching releases: %s/%s, %v", projectOwner, projectRepo, err)
 	}
 
-	if *latestRelease.Name <= "v"+version {
+	if *latestRelease.TagName <= "v"+version {
 		fmt.Printf("You are already using %s version %s\n", projectRepo, version)
 		os.Exit(0)
 	}
