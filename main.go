@@ -69,7 +69,7 @@ func main() {
 	utilities.Explain = *explain
 	utilities.DryRun = *dryRun
 
-	backupsStart := carbon.Now()
+	backupsStart := carbon.Now().AddDay()
 
 	if *startDate != "" {
 		backupsStart = date.Extract(*startDate)
