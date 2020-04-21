@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ntwklr/s3-backup-expirator/utilities"
@@ -15,7 +16,9 @@ type Period struct {
 
 // Periods calculates the retention periods
 func Periods(start carbon.Carbon, intervals map[string]int) map[string]Period {
-	end := time.Now()
+	if utilities.Bench == true {
+		defer utilities.TimeTrack(time.Now(), "backup.Periods")
+	}
 
 	periods := make(map[string]Period)
 
@@ -39,11 +42,8 @@ func Periods(start carbon.Carbon, intervals map[string]int) map[string]Period {
 	endYearly := startYearly.SubYears(intervals["yearly"]).Copy()
 	periods["yearly"] = Period{startYearly, endYearly}
 
-	if utilities.Explain == true {
-		utilities.TimeTrack(end, "backup.Periods")
-	}
-
-	if utilities.Explain == true {
+	if utilities.Debug == true {
+		fmt.Println("backup.Periods:")
 		utilities.PrettyPrint(periods)
 	}
 

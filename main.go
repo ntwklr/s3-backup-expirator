@@ -62,11 +62,13 @@ func main() {
 	weekly := flag.Int("weekly", 0, "Weekly Backup Retention Policy.")
 	monthly := flag.Int("monthly", 0, "Monthly Backup Retention Policy.")
 	yearly := flag.Int("yearly", 0, "Yearly Backup Retention Policy.")
-	explain := flag.Bool("explain", false, "Explains wich files retain in bucket.")
+	bench := flag.Bool("bench", false, "Print the backup calculations.")
+	debug := flag.Bool("debug", false, "Print the results of the backup calculations.")
 	dryRun := flag.Bool("dry-run", false, "Print the commands that would be executed, but do not execute them.")
 	flag.Parse()
 
-	utilities.Explain = *explain
+	utilities.Bench = *bench
+	utilities.Debug = *debug
 	utilities.DryRun = *dryRun
 
 	backupsStart := carbon.Now()
@@ -77,7 +79,7 @@ func main() {
 
 	periodIntervals := utilities.Boot(*daily, *weekly, *monthly, *yearly)
 
-	if utilities.Explain == true {
+	if utilities.Bench == true {
 		utilities.TimeTrack(bootStart, "app.Boot")
 	}
 	appStart := time.Now()
@@ -92,7 +94,7 @@ func main() {
 
 	backup.DeleteExpired(backups, backupsToStay)
 
-	if utilities.Explain == true {
+	if utilities.Bench == true {
 		utilities.TimeTrack(appStart, "app.Execute")
 	}
 }

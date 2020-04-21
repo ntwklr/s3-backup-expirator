@@ -1,5 +1,7 @@
 package utilities
 
-var Explain = false
+var Bench = false
+
+var Debug = false
 
 var DryRun = false

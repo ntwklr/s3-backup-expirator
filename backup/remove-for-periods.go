@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"fmt"
 	"sort"
 	"time"
 
@@ -14,7 +15,7 @@ func (a SortByValueDesc) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a SortByValueDesc) Less(i, j int) bool { return a[i] > a[j] }
 
 func RemoveForAllPeriodsExceptOne(backupsPerPeriod map[string]map[string][]Backup, intervals map[string]int) Backups {
-	if utilities.Explain == true {
+	if utilities.Bench == true {
 		defer utilities.TimeTrack(time.Now(), "backup.RemoveForAllPeriodsExceptOne")
 	}
 
@@ -51,6 +52,11 @@ func RemoveForAllPeriodsExceptOne(backupsPerPeriod map[string]map[string][]Backu
 	}
 
 	sort.Sort(SortByFilePath(backups))
+
+	if utilities.Debug == true {
+		fmt.Println("backup.RemoveForAllPeriodsExceptOne:")
+		utilities.PrettyPrint(backups)
+	}
 
 	return Backups{Backups: backups}
 }

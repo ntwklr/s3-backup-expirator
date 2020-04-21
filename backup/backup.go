@@ -54,7 +54,7 @@ func List(bucket string, prefix string) Backups {
 
 	objectList := aws.List(bucket, prefix).Contents
 
-	if utilities.Explain == true {
+	if utilities.Bench == true {
 		utilities.TimeTrack(start, "backup.List")
 	}
 
@@ -84,7 +84,7 @@ func DeleteExpired(backups Backups, backupsToStay Backups) {
 }
 
 func Hydrate(objectList []*s3.Object, prefix string) []Backup {
-	if utilities.Explain == true {
+	if utilities.Bench == true {
 		defer utilities.TimeTrack(time.Now(), "backup.Hydrate")
 	}
 
@@ -114,6 +114,11 @@ func Hydrate(objectList []*s3.Object, prefix string) []Backup {
 			ModifiedAt: *item.LastModified,
 			Size:       *item.Size, Storage: *item.StorageClass,
 		})
+	}
+
+	if utilities.Debug == true {
+		fmt.Println("backup.Hydrate:")
+		utilities.PrettyPrint(backups)
 	}
 
 	return backups

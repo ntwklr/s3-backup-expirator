@@ -1,12 +1,15 @@
 package utilities
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 )
 
 func Boot(daily int, weekly int, monthly int, yearly int) map[string]int {
 	intervals := make(map[string]int)
+
+	intervals["all"] = 999
 
 	backupsDaily := 8
 	if len(os.Getenv("BACKUPS_DAILY")) > 0 {
@@ -53,6 +56,11 @@ func Boot(daily int, weekly int, monthly int, yearly int) map[string]int {
 		backupsYearly = yearly
 	}
 	intervals["yearly"] = backupsYearly
+
+	if Debug == true {
+		fmt.Println("app.Boot:")
+		PrettyPrint(intervals)
+	}
 
 	return intervals
 }

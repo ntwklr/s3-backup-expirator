@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -8,7 +9,7 @@ import (
 )
 
 func PerPeriod(periods map[string]Period, backups Backups) map[string]map[string][]Backup {
-	if utilities.Explain == true {
+	if utilities.Bench == true {
 		defer utilities.TimeTrack(time.Now(), "backup.PerPeriod")
 	}
 
@@ -43,6 +44,11 @@ func PerPeriod(periods map[string]Period, backups Backups) map[string]map[string
 		}
 
 		periodsMap[periodKey] = groupMap
+	}
+
+	if utilities.Debug == true {
+		fmt.Println("backup.PerPeriod:")
+		utilities.PrettyPrint(periodsMap)
 	}
 
 	return periodsMap
