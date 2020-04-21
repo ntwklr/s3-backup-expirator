@@ -19,7 +19,11 @@ func Periods(start carbon.Carbon, intervals map[string]int) map[string]Period {
 
 	periods := make(map[string]Period)
 
-	startDaily := start.Copy()
+	startAll := start.Copy()
+	endAll := startAll.SubDay().Copy()
+	periods["all"] = Period{startAll, endAll}
+
+	startDaily := endAll.Copy()
 	endDaily := startDaily.SubDays(intervals["daily"]).Copy()
 	periods["daily"] = Period{startDaily, endDaily}
 

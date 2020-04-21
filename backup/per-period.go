@@ -19,7 +19,11 @@ func PerPeriod(periods map[string]Period, backups Backups) map[string]map[string
 
 		for _, backup := range backups.Backups {
 			if backup.Date.Between(period.Start, period.End, true) {
-				groupKey := backup.Date.Format("20060102")
+				groupKey := backup.Date.Format("20060102150405")
+
+				if periodKey == "daily" {
+					groupKey = backup.Date.Format("20060102")
+				}
 
 				if periodKey == "weekly" {
 					year, week := backup.Date.WeekOfYear()
