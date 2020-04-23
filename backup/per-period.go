@@ -8,15 +8,15 @@ import (
 	"github.com/ntwklr/s3-backup-expirator/utilities"
 )
 
-func PerPeriod(periods map[string]Period, backups Backups) map[string]map[string][]Backup {
+func PerPeriod(periods map[string]*Period, backups *Backups) map[string]map[string][]*Backup {
 	if utilities.Bench == true {
 		defer utilities.TimeTrack(time.Now(), "backup.PerPeriod")
 	}
 
-	periodsMap := make(map[string]map[string][]Backup)
+	periodsMap := make(map[string]map[string][]*Backup)
 
 	for periodKey, period := range periods {
-		groupMap := make(map[string][]Backup)
+		groupMap := make(map[string][]*Backup)
 
 		for _, backup := range backups.Backups {
 			if backup.Date.Between(period.Start, period.End, true) {

@@ -14,12 +14,12 @@ func (a SortByValueDesc) Len() int           { return len(a) }
 func (a SortByValueDesc) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a SortByValueDesc) Less(i, j int) bool { return a[i] > a[j] }
 
-func RemoveForAllPeriodsExceptOne(backupsPerPeriod map[string]map[string][]Backup, intervals map[string]int) Backups {
+func RemoveForAllPeriodsExceptOne(backupsPerPeriod map[string]map[string][]*Backup, intervals map[string]int) *Backups {
 	if utilities.Bench == true {
 		defer utilities.TimeTrack(time.Now(), "backup.RemoveForAllPeriodsExceptOne")
 	}
 
-	backups := []Backup{}
+	backups := []*Backup{}
 
 	for periodKey, period := range backupsPerPeriod {
 		groupKeys := make([]string, 0, len(period))
@@ -58,5 +58,5 @@ func RemoveForAllPeriodsExceptOne(backupsPerPeriod map[string]map[string][]Backu
 		utilities.PrettyPrint(backups)
 	}
 
-	return Backups{Backups: backups}
+	return &Backups{Backups: backups}
 }

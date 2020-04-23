@@ -9,7 +9,9 @@ import (
 func Boot(daily int, weekly int, monthly int, yearly int) map[string]int {
 	intervals := make(map[string]int)
 
-	intervals["all"] = 999
+	backupsAll := 999
+
+	intervals["all"] = backupsAll
 
 	backupsDaily := 8
 	if len(os.Getenv("BACKUPS_DAILY")) > 0 {

@@ -84,9 +84,9 @@ func main() {
 	}
 	appStart := time.Now()
 
-	backups := backup.List(bucket, *prefix)
+	backups := backup.List(bucket, prefix)
 
-	periods := backup.Periods(*backupsStart, periodIntervals)
+	periods := backup.Periods(backupsStart, periodIntervals)
 
 	backupsPerPeriod := backup.PerPeriod(periods, backups)
 

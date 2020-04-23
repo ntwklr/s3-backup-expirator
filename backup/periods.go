@@ -15,32 +15,32 @@ type Period struct {
 }
 
 // Periods calculates the retention periods
-func Periods(start carbon.Carbon, intervals map[string]int) map[string]Period {
+func Periods(start *carbon.Carbon, intervals map[string]int) map[string]*Period {
 	if utilities.Bench == true {
 		defer utilities.TimeTrack(time.Now(), "backup.Periods")
 	}
 
-	periods := make(map[string]Period)
+	periods := make(map[string]*Period)
 
-	startAll := start.Copy()
-	endAll := startAll.SubDay().Copy()
-	periods["all"] = Period{startAll, endAll}
+	startAll := start
+	endAll := startAll.SubDay()
+	periods["all"] = &Period{startAll, endAll}
 
-	startDaily := endAll.Copy()
-	endDaily := startDaily.SubDays(intervals["daily"]).Copy()
-	periods["daily"] = Period{startDaily, endDaily}
+	startDaily := endAll
+	endDaily := startDaily.SubDays(intervals["daily"])
+	periods["daily"] = &Period{startDaily, endDaily}
 
-	startWeekly := endDaily.Copy()
-	endWeekly := startWeekly.SubWeeks(intervals["weekly"]).Copy()
-	periods["weekly"] = Period{startWeekly, endWeekly}
+	startWeekly := endDaily
+	endWeekly := startWeekly.SubWeeks(intervals["weekly"])
+	periods["weekly"] = &Period{startWeekly, endWeekly}
 
-	startMonthly := endWeekly.Copy()
-	endMonthly := startMonthly.SubMonths(intervals["monthly"]).Copy()
-	periods["monthly"] = Period{startMonthly, endMonthly}
+	startMonthly := endWeekly
+	endMonthly := startMonthly.SubMonths(intervals["monthly"])
+	periods["monthly"] = &Period{startMonthly, endMonthly}
 
-	startYearly := endMonthly.Copy()
-	endYearly := startYearly.SubYears(intervals["yearly"]).Copy()
-	periods["yearly"] = Period{startYearly, endYearly}
+	startYearly := endMonthly
+	endYearly := startYearly.SubYears(intervals["yearly"])
+	periods["yearly"] = &Period{startYearly, endYearly}
 
 	if utilities.Debug == true {
 		fmt.Println("backup.Periods:")
