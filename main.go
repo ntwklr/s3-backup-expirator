@@ -27,25 +27,25 @@ const (
 var version string
 
 func init() {
-	dotenv := ".env"
+	dotenv := "./.env"
 	appenv := os.Getenv("APP_ENV")
 
 	if appenv != "" {
 		dotenv = dotenv + "." + strings.ToLower(appenv)
 	}
 
-	errLoad := godotenv.Overload("./" + dotenv)
+	errLoad := godotenv.Overload(dotenv)
 	if errLoad != nil {
-		_, errStat := os.Stat("./" + dotenv)
+		_, errStat := os.Stat(dotenv)
 
 		if os.IsNotExist(errStat) {
-			example, errRead := godotenv.Read("./.env.example")
+			example, errUnmarshal := godotenv.Unmarshal("AWS_REGION=")
 
-			if errRead != nil {
-				log.Fatal(errRead)
+			if errUnmarshal != nil {
+				log.Fatal(errUnmarshal)
 			}
 
-			errWrite := godotenv.Write(example, "./"+dotenv)
+			errWrite := godotenv.Write(example, dotenv)
 
 			if errWrite != nil {
 				log.Fatal(errWrite)
