@@ -1,7 +1,7 @@
 package utilities
 
-var Bench = false
+var Bench bool = false
 
-var Debug = false
+var Debug bool = false
 
-var DryRun = false
+var DryRun bool = false
