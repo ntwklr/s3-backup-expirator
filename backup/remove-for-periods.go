@@ -14,7 +14,7 @@ func (a SortByValueDesc) Len() int           { return len(a) }
 func (a SortByValueDesc) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a SortByValueDesc) Less(i, j int) bool { return a[i] > a[j] }
 
-func RemoveForAllPeriodsExceptOne(backupsPerPeriod map[string]map[string][]*Backup, intervals map[string]int) *Backups {
+func RemoveForAllPeriodsExceptOne(backupsPerPeriod map[string]map[string][]*Backup, intervals map[string]*int) *Backups {
 	if utilities.Bench == true {
 		defer utilities.TimeTrack(time.Now(), "backup.RemoveForAllPeriodsExceptOne")
 	}
@@ -32,11 +32,11 @@ func RemoveForAllPeriodsExceptOne(backupsPerPeriod map[string]map[string][]*Back
 		interval := intervals[periodKey]
 		groupKeysLength := len(groupKeys)
 
-		if groupKeysLength < interval {
-			interval = groupKeysLength
+		if groupKeysLength < *interval {
+			*interval = groupKeysLength
 		}
 
-		groupKeys = groupKeys[:interval]
+		groupKeys = groupKeys[:*interval]
 
 		for _, groupKey := range groupKeys {
 			group := period[groupKey]

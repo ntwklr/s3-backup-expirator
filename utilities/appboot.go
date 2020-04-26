@@ -6,12 +6,12 @@ import (
 	"strconv"
 )
 
-func Boot(daily int, weekly int, monthly int, yearly int) map[string]int {
-	intervals := make(map[string]int)
+func Boot(daily int, weekly int, monthly int, yearly int) map[string]*int {
+	intervals := make(map[string]*int)
 
 	backupsAll := 999
 
-	intervals["all"] = backupsAll
+	intervals["all"] = &backupsAll
 
 	backupsDaily := 8
 	if len(os.Getenv("BACKUPS_DAILY")) > 0 {
@@ -23,7 +23,7 @@ func Boot(daily int, weekly int, monthly int, yearly int) map[string]int {
 		backupsDaily = daily
 	}
 
-	intervals["daily"] = backupsDaily
+	intervals["daily"] = &backupsDaily
 
 	backupsWeekly := 5
 	if len(os.Getenv("BACKUPS_WEEKLY")) > 0 {
@@ -35,7 +35,7 @@ func Boot(daily int, weekly int, monthly int, yearly int) map[string]int {
 		backupsWeekly = weekly
 	}
 
-	intervals["weekly"] = backupsWeekly
+	intervals["weekly"] = &backupsWeekly
 
 	backupsMonthly := 13
 	if len(os.Getenv("BACKUPS_MONTHLY")) > 0 {
@@ -46,7 +46,7 @@ func Boot(daily int, weekly int, monthly int, yearly int) map[string]int {
 	if monthly > 0 {
 		backupsMonthly = monthly
 	}
-	intervals["monthly"] = backupsMonthly
+	intervals["monthly"] = &backupsMonthly
 
 	backupsYearly := 7
 	if len(os.Getenv("BACKUPS_YEARLY")) > 0 {
@@ -57,7 +57,7 @@ func Boot(daily int, weekly int, monthly int, yearly int) map[string]int {
 	if yearly > 0 {
 		backupsYearly = yearly
 	}
-	intervals["yearly"] = backupsYearly
+	intervals["yearly"] = &backupsYearly
 
 	if Debug == true {
 		fmt.Println("app.Boot:")

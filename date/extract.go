@@ -8,11 +8,11 @@ import (
 )
 
 // Extract extracts the datetime from string
-func Extract(val string) *carbon.Carbon {
+func Extract(val *string) *carbon.Carbon {
 	format := "2006-01-02-15-04-05"
 
 	pattern := regexp.MustCompile(`(\d{4}-\d{2}-\d{2})(-\d{2})?(-\d{2})?(-\d{2})?`)
-	timeString := pattern.FindString(val)
+	timeString := pattern.FindString(*val)
 
 	if len(timeString) == 16 {
 		format = "2006-01-02-15-04"
