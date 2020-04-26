@@ -14,23 +14,23 @@ import (
 )
 
 type Backup struct {
-	ID         *string
-	FilePath   *string
-	Date       *carbon.Carbon
-	ModifiedAt *time.Time
-	Size       *int64
-	Storage    *string
+	ID         *string        `type:"string"`
+	FilePath   *string        `type:"string"`
+	Date       *carbon.Carbon `type:"timestamp"`
+	ModifiedAt *time.Time     `type:"timestamp"`
+	Size       *int64         `type:"integer"`
+	Storage    *string        `type:"string"`
 }
 
 type Backups struct {
-	Bucket  *string
-	Prefix  *string
-	Backups []*Backup
+	Bucket  *string   `type:"string"`
+	Prefix  *string   `type:"string"`
+	Backups []*Backup `type:"structure"`
 }
 
 func (backups *Backups) Contains(backup *Backup) bool {
 	for _, b := range backups.Backups {
-		if *backup == *b {
+		if backup == b {
 			return true
 		}
 	}
@@ -113,7 +113,7 @@ func Hydrate(objectList []*s3.Object, prefix *string) []*Backup {
 		backups = append(backups, &Backup{
 			ID:         item.ETag,
 			FilePath:   item.Key,
-			Date:       date.Extract(*item.Key),
+			Date:       date.Extract(item.Key),
 			ModifiedAt: item.LastModified,
 			Size:       item.Size,
 			Storage:    item.StorageClass,
