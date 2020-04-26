@@ -3,11 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 
-	"github.com/subosito/gotenv"
+	"github.com/joho/godotenv"
 	"github.com/uniplaces/carbon"
 
 	"github.com/ntwklr/s3-backup-expirator/backup"
@@ -25,7 +27,33 @@ const (
 var version string
 
 func init() {
-	gotenv.OverLoad()
+	dotenv := ".env"
+	appenv := os.Getenv("APP_ENV")
+
+	if appenv != "" {
+		dotenv = dotenv + "." + strings.ToLower(appenv)
+	}
+
+	errLoad := godotenv.Overload("./" + dotenv)
+	if errLoad != nil {
+		_, errStat := os.Stat("./" + dotenv)
+
+		if os.IsNotExist(errStat) {
+			example, errRead := godotenv.Read("./.env.example")
+
+			if errRead != nil {
+				log.Fatal(errRead)
+			}
+
+			errWrite := godotenv.Write(example, "./"+dotenv)
+
+			if errWrite != nil {
+				log.Fatal(errWrite)
+			}
+		} else {
+			log.Fatal(errLoad)
+		}
+	}
 }
 
 // Deletes the specified object in the specified S3 Bucket in the region configured in the shared config
@@ -74,7 +102,7 @@ func main() {
 	backupsStart := carbon.Now()
 
 	if *startDate != "" {
-		backupsStart = date.Extract(*startDate)
+		backupsStart = date.Extract(startDate)
 	}
 
 	periodIntervals := utilities.Boot(*daily, *weekly, *monthly, *yearly)
