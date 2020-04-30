@@ -22,24 +22,24 @@ func Periods(start *carbon.Carbon, intervals map[string]*int) map[string]*Period
 
 	periods := make(map[string]*Period)
 
-	startAll := start
-	endAll := startAll.SubDay()
+	startAll := start.EndOfDay()
+	endAll := startAll.SubDay().StartOfDay()
 	periods["all"] = &Period{startAll, endAll}
 
-	startDaily := endAll
-	endDaily := startDaily.SubDays(*intervals["daily"])
+	startDaily := endAll.EndOfDay()
+	endDaily := startDaily.SubDays(*intervals["daily"]).StartOfDay()
 	periods["daily"] = &Period{startDaily, endDaily}
 
-	startWeekly := endDaily
-	endWeekly := startWeekly.SubWeeks(*intervals["weekly"])
+	startWeekly := endDaily.EndOfWeek()
+	endWeekly := startWeekly.SubWeeks(*intervals["weekly"]).StartOfWeek()
 	periods["weekly"] = &Period{startWeekly, endWeekly}
 
-	startMonthly := endWeekly
-	endMonthly := startMonthly.SubMonths(*intervals["monthly"])
+	startMonthly := endWeekly.EndOfMonth()
+	endMonthly := startMonthly.SubMonths(*intervals["monthly"]).StartOfMonth()
 	periods["monthly"] = &Period{startMonthly, endMonthly}
 
-	startYearly := endMonthly
-	endYearly := startYearly.SubYears(*intervals["yearly"])
+	startYearly := endMonthly.EndOfYear()
+	endYearly := startYearly.SubYears(*intervals["yearly"]).StartOfYear()
 	periods["yearly"] = &Period{startYearly, endYearly}
 
 	if utilities.Debug == true {
