@@ -23,7 +23,7 @@ func Periods(start *carbon.Carbon, intervals map[string]*int) map[string]*Period
 	periods := make(map[string]*Period)
 
 	startAll := start.EndOfDay()
-	endAll := start.SubDay()
+	endAll := start.SubDays(*intervals["all"])
 	periods["all"] = &Period{startAll, endAll}
 
 	startDaily := endAll.EndOfDay()

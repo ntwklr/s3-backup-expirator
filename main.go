@@ -86,10 +86,11 @@ func main() {
 
 	prefix := flag.String("prefix", "", "File-Prefix")
 	startDate := flag.String("start-date", "", "Start-Date for Backups (default: now)")
-	daily := flag.Int("daily", 0, "Daily Backup Retention Policy.")
-	weekly := flag.Int("weekly", 0, "Weekly Backup Retention Policy.")
-	monthly := flag.Int("monthly", 0, "Monthly Backup Retention Policy.")
-	yearly := flag.Int("yearly", 0, "Yearly Backup Retention Policy.")
+	all := flag.Int("all", 0, "All Backups Retention Policy.")
+	daily := flag.Int("daily", 0, "Daily Backups Retention Policy.")
+	weekly := flag.Int("weekly", 0, "Weekly Backups Retention Policy.")
+	monthly := flag.Int("monthly", 0, "Monthly Backups Retention Policy.")
+	yearly := flag.Int("yearly", 0, "Yearly Backups Retention Policy.")
 	bench := flag.Bool("bench", false, "Print the backup calculations.")
 	debug := flag.Bool("debug", false, "Print the results of the backup calculations.")
 	dryRun := flag.Bool("dry-run", false, "Print the commands that would be executed, but do not execute them.")
@@ -105,7 +106,7 @@ func main() {
 		backupsStart = date.Extract(startDate)
 	}
 
-	periodIntervals := utilities.Boot(*daily, *weekly, *monthly, *yearly)
+	periodIntervals := utilities.Boot(*all, *daily, *weekly, *monthly, *yearly)
 
 	if utilities.Bench == true {
 		utilities.TimeTrack(bootStart, "app.Boot")

@@ -6,10 +6,18 @@ import (
 	"strconv"
 )
 
-func Boot(daily int, weekly int, monthly int, yearly int) map[string]*int {
+func Boot(all int, daily int, weekly int, monthly int, yearly int) map[string]*int {
 	intervals := make(map[string]*int)
 
-	backupsAll := 999
+	backupsAll := 3
+	if len(os.Getenv("BACKUPS_ALL")) > 0 {
+		value, _ := strconv.Atoi(os.Getenv("BACKUPS_ALL"))
+
+		backupsAll = value
+	}
+	if all > 0 {
+		backupsAll = all
+	}
 
 	intervals["all"] = &backupsAll
 

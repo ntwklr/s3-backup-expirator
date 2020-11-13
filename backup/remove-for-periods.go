@@ -36,7 +36,9 @@ func RemoveForAllPeriodsExceptOne(backupsPerPeriod map[string]map[string][]*Back
 			*interval = groupKeysLength
 		}
 
-		groupKeys = groupKeys[:*interval]
+		if periodKey != "all" {
+			groupKeys = groupKeys[:*interval]
+		}
 
 		for _, groupKey := range groupKeys {
 			group := period[groupKey]
