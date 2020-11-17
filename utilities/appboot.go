@@ -9,7 +9,7 @@ import (
 func Boot(all int, daily int, weekly int, monthly int, yearly int) map[string]*int {
 	intervals := make(map[string]*int)
 
-	backupsAll := 3
+	backupsAll := 2
 	if len(os.Getenv("BACKUPS_ALL")) > 0 {
 		value, _ := strconv.Atoi(os.Getenv("BACKUPS_ALL"))
 
